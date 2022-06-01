@@ -60,12 +60,12 @@ export class Groups extends BaseEntity {
     @Column('longtext', { name: 'content', nullable: true })
     content: string | null;
 
-    // @Column('timestamp', { name: 'createdAt', nullable: true })
-    @CreateDateColumn()
+    @Column('timestamp', { name: 'createdAt', nullable: true })
+    // @CreateDateColumn()
     createdAt: Date;
 
-    // @Column('timestamp', { name: 'updatedAt', nullable: true })
-    @UpdateDateColumn()
+    @Column('timestamp', { name: 'updatedAt', nullable: true })
+    // @UpdateDateColumn()
     updatedAt: Date;
 
     @Column('varchar', { name: 'thumbnailUrl2', nullable: true, length: 255 })
