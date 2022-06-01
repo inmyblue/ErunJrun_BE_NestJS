@@ -395,7 +395,10 @@ export class GroupsService {
                     groupId,
                 );
                 if (chkGroup.maxPeople <= applyPeople) {
-                    throw new HttpException('모집인원이 가득 찼습니다', 400);
+                    throw new HttpException(
+                        '신청인원이 남아있지 않습니다',
+                        400,
+                    );
                 }
 
                 await this.groupRepository.createApply(groupId, userId);
