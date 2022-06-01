@@ -83,6 +83,13 @@ export class GroupsService {
         let condition: condition = {};
 
         try {
+            if (query.page && query.size) {
+                Object.assign(condition, {
+                    page: query.page,
+                    size: query.size,
+                });
+            }
+
             switch (category) {
                 case 'mypage':
                     Object.assign(condition, { userId: myUserId });
@@ -230,13 +237,6 @@ export class GroupsService {
                                 distanceMax: Math.max(...distanceQuery) * 5,
                             });
                         }
-                    }
-
-                    if (query.page && query.size) {
-                        Object.assign(condition, {
-                            page: query.page,
-                            size: query.size,
-                        });
                     }
                     return await this.groupRepository.getGroup(
                         condition,
