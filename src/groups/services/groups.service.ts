@@ -98,10 +98,18 @@ export class GroupsService {
                         myUserId,
                     );
 
-                    Object.assign(condition, {
-                        distanceMin: parseInt(user.likeDistance) * 5 - 5,
-                        distanceMax: parseInt(user.likeDistance) * 5,
-                    });
+                    if (parseInt(user.likeDistance) === 0) {
+                        Object.assign(condition, {
+                            distanceMix: 0,
+                            distanceMax: 100,
+                        });
+                    } else {
+                        Object.assign(condition, {
+                            distanceMin: parseInt(user.likeDistance) * 5 - 5,
+                            distanceMax: parseInt(user.likeDistance) * 5,
+                        });
+                    }
+
                     Object.assign(condition, { region: user.likeLocation });
 
                     if (query.finish === '1') {
