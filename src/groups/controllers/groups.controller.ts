@@ -39,7 +39,7 @@ export class GroupsController {
         try {
             if (files) {
                 for (let i = 0; i < files.length; i++) {
-                    data[`thumbnailUrl${i + 1}`] = files[i]['location'];
+                    data[`thumbnailUrl${i + 1}`] = files[i]['key'];
                 }
             }
             data['userId'] = userId;
