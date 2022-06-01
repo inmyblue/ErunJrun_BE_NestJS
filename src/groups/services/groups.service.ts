@@ -121,13 +121,6 @@ export class GroupsService {
                         myUserId,
                     );
 
-                    if (data.length === 0) {
-                        data = await this.groupRepository.getGroup(
-                            {},
-                            myUserId,
-                        );
-                    }
-
                     let likeDistance: string, likeLocation: string;
 
                     switch (user.likeDistance) {
