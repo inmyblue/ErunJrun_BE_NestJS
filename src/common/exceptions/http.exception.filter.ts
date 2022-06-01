@@ -20,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         if (typeof error === 'string') {
             response.status(status).json({
                 success: false,
-                error,
+                message: error,
             });
         } else {
             response.status(status).json({
