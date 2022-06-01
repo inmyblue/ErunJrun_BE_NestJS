@@ -10,4 +10,6 @@ export interface condition {
     limit?: number;
     complete?: boolean;
     userId?: string;
+    page?: number;
+    size?: number;
 }

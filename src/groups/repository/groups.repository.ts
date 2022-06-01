@@ -118,6 +118,11 @@ export class GroupRepository {
             data.andWhere('userId = :userId', { userId: condition.userId });
         }
 
+        if (condition.page && condition.size) {
+            data.take(condition.size);
+            data.skip((condition.page - 1) * condition.size);
+        }
+
         return data.getRawMany().then(async (result) => {
             for (let i = 0; i < result.length; i++) {
                 //그룹러닝 호스트의 닉네임/프로필이미지 정보

@@ -230,6 +230,13 @@ export class GroupsService {
                             });
                         }
                     }
+
+                    if (query.page && query.size) {
+                        Object.assign(condition, {
+                            page: query.page,
+                            size: query.size,
+                        });
+                    }
                     return await this.groupRepository.getGroup(
                         condition,
                         myUserId,
