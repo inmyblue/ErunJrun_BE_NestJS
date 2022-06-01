@@ -43,9 +43,9 @@ export class GroupRepository {
                 'group.userId AS userId',
                 'maxPeople',
                 'thumbnailUrl1 AS thumbnailUrl',
-                '(select COUNT(*) from Users where userId=group.userId) AS applyPeople',
+                '(select COUNT(*) from Appliers where groupId=group.groupId) AS applyPeople',
                 'datediff(date,now()) AS applyEndTime',
-                'timestampdiff(minute, standbyTime, finishTime) AS totalTime',
+                'timestampdiff(second, updatedAt, now()) AS updateTime',
             ])
             .where('1')
             .orderBy('applyEndTime');
@@ -165,11 +165,6 @@ export class GroupRepository {
                     result[i].applyEndTime = '0 일';
                 }
 
-                //실제 러닝에 소요되는 시간 계산
-                result[i].totalTime = `${Math.floor(
-                    parseInt(result[i].totalTime) / 60,
-                )}h ${parseInt(result[i].totalTime) % 60}min`;
-
                 //러닝장소는 구정보까지만 나오도록
                 let location: string[] = result[i].location.split(' ');
                 result[i].location = location[0] + ' ' + location[1];
@@ -278,10 +273,9 @@ export class GroupRepository {
                 'content',
                 'thema',
                 'chattingRoom',
-                '(select COUNT(*) from Users where userId=group.userId) AS applyPeople',
+                '(select COUNT(*) from Appliers where groupId=group.groupId) AS applyPeople',
                 'createdAt',
                 'datediff(date,now()) AS applyEndTime',
-                'timestampdiff(minute, standbyTime, finishTime) AS totalTime',
             ])
             .where('group.groupId = :groupId', { groupId });
 
