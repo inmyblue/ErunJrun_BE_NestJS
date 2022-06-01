@@ -42,9 +42,6 @@ export class Groups extends BaseEntity {
     @Column('time', { name: 'standbyTime' })
     standbyTime: string;
 
-    @Column('time', { name: 'finishTime' })
-    finishTime: string;
-
     @Column('float', { name: 'distance', precision: 12 })
     distance: number;
 

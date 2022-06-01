@@ -270,7 +270,6 @@ export class GroupRepository {
                 'thumbnailUrl3',
                 'date',
                 'standbyTime',
-                'finishTime',
                 'distance',
                 'speed',
                 'location',
@@ -416,7 +415,6 @@ export class GroupRepository {
                 'thumbnailUrl1 AS thumbnailUrl',
                 'standbyTime',
                 'thema',
-                'timestampdiff(minute, standbyTime, finishTime) AS totalTime',
                 '(select COUNT(*) from Users where userId=groups.userId) AS applyPeople',
                 'datediff(date,now()) AS dDay',
             ])
@@ -426,10 +424,6 @@ export class GroupRepository {
             .getRawMany()
             .then((result) => {
                 for (let i = 0; i < result.length; i++) {
-                    result[i].totalTime = `${Math.floor(
-                        parseInt(result[i].totalTime) / 60,
-                    )}h ${parseInt(result[i].totalTime) % 60}min`;
-
                     result[i].date =
                         dayjs(result[i].date).format('YYYY.MM.DD (dd)') +
                         ' ' +
@@ -499,6 +493,7 @@ export class GroupRepository {
             .values({ groupId, groupTitle, category, userId })
             .execute();
     }
+
     addDdayAlarm(input: { [key: string]: string }) {
         const { groupId, groupTitle, category, userId, role, nickname } = input;
         return this.Alarms.createQueryBuilder()

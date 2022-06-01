@@ -10,8 +10,6 @@ export class GroupCreateDto {
     @IsNotEmpty()
     standbyTime: string;
     @IsNotEmpty()
-    finishTime: string;
-    @IsNotEmpty()
     distance: number;
     @IsNotEmpty()
     speed: string;
