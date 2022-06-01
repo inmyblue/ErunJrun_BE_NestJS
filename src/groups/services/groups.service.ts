@@ -230,7 +230,7 @@ export class GroupsService {
                         const distanceQuery = query.distance.split('/');
                         distanceQuery.pop();
                         if (distanceQuery.includes('0')) {
-                            Object.assign(condition, { distanceMin: 0 });
+                            Object.assign(condition, { distanceMin: -1 });
                         } else {
                             Object.assign(condition, {
                                 distanceMin: Math.min(...distanceQuery) * 5 - 5,
