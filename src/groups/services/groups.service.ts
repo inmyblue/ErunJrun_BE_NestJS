@@ -221,6 +221,7 @@ export class GroupsService {
 
                     if (query.distance) {
                         const distanceQuery = query.distance.split('/');
+                        distanceQuery.pop();
                         if (distanceQuery.includes('0')) {
                             Object.assign(condition, { distanceMin: 0 });
                         } else {
