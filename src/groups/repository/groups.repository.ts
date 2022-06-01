@@ -95,7 +95,7 @@ export class GroupRepository {
             condition.distanceMin !== null &&
             condition.distanceMin !== undefined
         ) {
-            if (condition.distanceMin !== 0 && condition.distanceMin !== 15) {
+            if (condition.distanceMin !== -1 && condition.distanceMin !== 15) {
                 data.andWhere(
                     'distance BETWEEN :distanceMin AND :distanceMax',
                     {
@@ -103,7 +103,7 @@ export class GroupRepository {
                         distanceMax: condition.distanceMax,
                     },
                 );
-            } else if (condition.distanceMin === 0) {
+            } else if (condition.distanceMin === -1) {
                 data.andWhere('distance >= 0');
             } else if (condition.distanceMin === 15) {
                 data.andWhere('distance >= 15');
