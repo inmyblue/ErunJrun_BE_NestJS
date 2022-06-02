@@ -61,7 +61,7 @@ export class GroupsController {
         @GetUser() user: Users,
     ): Promise<object> {
         let userId = '';
-        //if (user) userId = user.userId;
+
         switch (category) {
             case 'mypage':
             case 'complete':
