@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { AlarmModule } from './alarm/alarm.module';
 import { CommentsModule } from './comments/comments.module';
 import { MypageModule } from './mypage/mypage.module';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { MypageModule } from './mypage/mypage.module';
         AlarmModule,
         CommentsModule,
         MypageModule,
+        CoursesModule,
     ],
     controllers: [AppController],
     providers: [
