@@ -42,7 +42,6 @@ export class MypageController {
         @UploadedFiles() files: Array<Express.Multer.File>,
     ) {
         if (files.length !== 0) {
-            console.log(files);
             body['profileUrl'] = files[0]['location'];
         } else {
             body['profileUrl'] = body['image'];

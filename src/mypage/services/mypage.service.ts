@@ -1,6 +1,7 @@
 import { GroupRepository } from './../../groups/repository/groups.repository';
 import { UserRepository } from 'src/user/repository/user.repository';
 import { Injectable } from '@nestjs/common';
+import { createDecipher } from 'crypto';
 
 @Injectable()
 export class MypageService {
@@ -70,8 +71,36 @@ export class MypageService {
         return result;
     }
 
-    getUserForUpdate(userId: string): Promise<object> {
-        return this.UserRepository.getUserById(userId);
+    async getUserForUpdate(userId: string): Promise<object> {
+        const data = await this.UserRepository.getUserById(userId);
+        switch (data.userLevel) {
+            case '오렌지':
+                data.userLevel = '0';
+                break;
+            case '퍼플':
+                data.userLevel = '1';
+                break;
+            case '블루':
+                data.userLevel = '2';
+                break;
+            case '레드':
+                data.userLevel = '3';
+                break;
+            case '블랙':
+                data.userLevel = '4';
+                break;
+        }
+
+        if (data.phone !== null) {
+            const key = process.env.CRYPTO_KEY;
+            const decode = createDecipher('des', key);
+
+            data.phone =
+                decode.update(data.phone, 'base64', 'utf8') +
+                decode.final('utf8');
+        }
+
+        return data;
     }
 
     updateUser(userId: string, body: object) {
