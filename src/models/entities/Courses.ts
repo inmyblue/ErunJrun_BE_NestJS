@@ -1,11 +1,11 @@
 import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+    Column,
+    Entity,
+    Index,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Bookmarks } from './Bookmarks';
 import { Comments } from './Comments';
@@ -15,56 +15,82 @@ import { Starpoint } from './Starpoint';
 @Index('FK_Users_TO_Courses_1', ['userId'], {})
 @Entity('Courses', { schema: 'erunjrun' })
 export class Courses {
-  @Column('varchar', { primary: true, name: 'courseId', length: 150 })
-  @PrimaryGeneratedColumn('uuid')
-  courseId: string;
+    @Column('varchar', { primary: true, name: 'courseId', length: 150 })
+    @PrimaryGeneratedColumn('uuid')
+    courseId: string;
 
-  @Column('varchar', { name: 'userId', length: 150 })
-  userId: string;
+    @Column('varchar', { name: 'userId', length: 150 })
+    userId: string;
 
-  @Column('varchar', { name: 'title', length: 150 })
-  title: string;
+    @Column('varchar', { name: 'title', length: 150 })
+    title: string;
 
-  @Column('longtext', { name: 'content' })
-  content: string;
+    @Column('longtext', { name: 'content' })
+    content: string;
 
-  @Column('varchar', { name: 'location', length: 255 })
-  location: string;
+    @Column('varchar', { name: 'location', length: 255 })
+    location: string;
 
-  @Column('float', { name: 'distance', precision: 12 })
-  distance: number;
+    @Column('float', { name: 'distance', precision: 12 })
+    distance: number;
 
-  @Column('datetime', { name: 'finishTime' })
-  finishTime: Date;
+    @Column('datetime', { name: 'totalTime' })
+    totalTime: Date;
 
-  @Column('varchar', { name: 'courseImageUrl', length: 255 })
-  courseImageUrl: string;
+    @Column('varchar', { name: 'courseImageUrl1', length: 255 })
+    courseImageUrl1: string;
 
-  @Column('varchar', { name: 'mapLatLng', length: 150 })
-  mapLatLng: string;
+    @Column('varchar', { name: 'courseImageUrl2', length: 255 })
+    courseImageUrl2: string;
 
-  @Column('float', { name: 'starPoint', nullable: true, precision: 12 })
-  starPoint: number | null;
+    @Column('varchar', { name: 'courseImageUrl3', length: 255 })
+    courseImageUrl3: string;
 
-  @Column('timestamp', { name: 'createdAt', nullable: true })
-  createdAt: Date | null;
+    @Column('varchar', { name: 'mapLatLng', length: 255 })
+    mapLatLng: string;
 
-  @Column('timestamp', { name: 'updatedAt', nullable: true })
-  updatedAt: Date | null;
+    @Column('float', {
+        name: 'starPoint',
+        nullable: true,
+        precision: 12,
+        default: () => '0',
+    })
+    starPoint: number | null;
 
-  @OneToMany(() => Bookmarks, (bookmarks) => bookmarks.course)
-  bookmarks: Bookmarks[];
+    @Column('varchar', { name: 'baggage', length: 255 })
+    baggage: string;
 
-  @OneToMany(() => Comments, (comments) => comments.course)
-  comments: Comments[];
+    @Column('varchar', { name: 'parking', length: 255 })
+    parking: string;
 
-  @ManyToOne(() => Users, (users) => users.courses, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'userId', referencedColumnName: 'userId' }])
-  user: Users;
+    @Column('int', { name: 'clickCnt', nullable: false, default: () => '0' })
+    clickCnt: string;
 
-  @OneToMany(() => Starpoint, (starpoint) => starpoint.course)
-  starpoints: Starpoint[];
+    @Column('int', { name: 'region', nullable: false })
+    region: string;
+
+    @Column('varchar', { name: 'thema', length: 20, nullable: false })
+    thema: string;
+
+    @Column('timestamp', { name: 'createdAt', nullable: true })
+    createdAt: Date | null;
+
+    @Column('timestamp', { name: 'updatedAt', nullable: true })
+    updatedAt: Date | null;
+
+    @OneToMany(() => Bookmarks, (bookmarks) => bookmarks.course)
+    bookmarks: Bookmarks[];
+
+    @OneToMany(() => Comments, (comments) => comments.course)
+    comments: Comments[];
+
+    @ManyToOne(() => Users, (users) => users.courses, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+    })
+    @JoinColumn([{ name: 'userId', referencedColumnName: 'userId' }])
+    user: Users;
+
+    @OneToMany(() => Starpoint, (starpoint) => starpoint.course)
+    starpoints: Starpoint[];
 }
