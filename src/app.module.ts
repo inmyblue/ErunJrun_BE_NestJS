@@ -29,7 +29,7 @@ import { CoursesModule } from './courses/courses.module';
             autoLoadEntities: true,
             logging: true,
             keepConnectionAlive: true,
-            timezone: 'Z',
+            timezone: 'local',
         }),
         GroupsModule,
         MorganModule,
