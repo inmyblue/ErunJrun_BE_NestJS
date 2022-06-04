@@ -80,11 +80,56 @@ export const profileOption = {
     fileFilter,
 };
 
+export const courseOption = {
+    storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_BUCKET3,
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            cb(
+                null,
+                Math.floor(Math.random() * 1000).toString() +
+                    Date.now() +
+                    '.' +
+                    file.originalname.split('.').pop(),
+            );
+        },
+    }),
+    limits,
+    fileFilter,
+};
+
 export const deleteImg = (url: string) => {
     if (url) {
         s3.deleteObject(
             {
                 Bucket: process.env.AWS_S3_BUCKET,
+                Key: url,
+            },
+            function (err, data) {},
+        );
+        s3.deleteObject(
+            {
+                Bucket: process.env.AWS_S3_BUCKET_W384,
+                Key: url,
+            },
+            function (err, data) {},
+        );
+        s3.deleteObject(
+            {
+                Bucket: process.env.AWS_S3_BUCKET_W758,
+                Key: url,
+            },
+            function (err, data) {},
+        );
+    }
+};
+
+export const deleteCourse = (url: string) => {
+    if (url) {
+        s3.deleteObject(
+            {
+                Bucket: process.env.AWS_S3_BUCKET3,
                 Key: url,
             },
             function (err, data) {},
