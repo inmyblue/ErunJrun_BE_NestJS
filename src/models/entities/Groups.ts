@@ -62,11 +62,11 @@ export class Groups extends BaseEntity {
 
     @Column('timestamp', { name: 'createdAt', nullable: true })
     // @CreateDateColumn()
-    createdAt: Date;
+    createdAt: string;
 
     @Column('timestamp', { name: 'updatedAt', nullable: true })
     // @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt: string;
 
     @Column('varchar', { name: 'thumbnailUrl2', nullable: true, length: 255 })
     thumbnailUrl2: string | null;

@@ -34,9 +34,6 @@ export class Courses {
     @Column('float', { name: 'distance', precision: 12 })
     distance: number;
 
-    @Column('datetime', { name: 'totalTime' })
-    totalTime: Date;
-
     @Column('varchar', { name: 'courseImageUrl1', length: 255 })
     courseImageUrl1: string;
 
@@ -67,16 +64,16 @@ export class Courses {
     clickCnt: string;
 
     @Column('int', { name: 'region', nullable: false })
-    region: string;
+    region: number;
 
     @Column('varchar', { name: 'thema', length: 20, nullable: false })
     thema: string;
 
-    @Column('timestamp', { name: 'createdAt', nullable: true })
-    createdAt: Date | null;
+    @Column('datetime', { name: 'createdAt', nullable: true })
+    createdAt: string;
 
-    @Column('timestamp', { name: 'updatedAt', nullable: true })
-    updatedAt: Date | null;
+    @Column('datetime', { name: 'updatedAt', nullable: true })
+    updatedAt: string;
 
     @OneToMany(() => Bookmarks, (bookmarks) => bookmarks.course)
     bookmarks: Bookmarks[];
