@@ -222,7 +222,18 @@ export class CourseRepository {
         return this.starPoint
             .createQueryBuilder()
             .where('courseId = :courseId', { courseId })
-            .getCount();
+            .getMany()
+            .then((result) => {
+                let total: number = 0;
+                for (let i = 0; i < result.length; i++) {
+                    console.log(result[i].myStarPoint);
+                    total += result[i].myStarPoint;
+                }
+                return {
+                    total,
+                    count: result.length,
+                };
+            });
     }
 
     getCourseByCourseId(courseId: string) {
@@ -243,6 +254,64 @@ export class CourseRepository {
         return this.Course.createQueryBuilder()
             .delete()
             .from(Courses)
+            .where('courseId = :courseId', { courseId })
+            .execute();
+    }
+
+    getBookmark(courseId: string, userId: string) {
+        return this.Bookmark.createQueryBuilder()
+            .where('courseId = :courseId', { courseId })
+            .andWhere('userId = :userId', { userId })
+            .getOne();
+    }
+
+    doBookmark(courseId: string, userId: string) {
+        return this.Bookmark.createQueryBuilder()
+            .insert()
+            .into(Bookmarks)
+            .values({ courseId, userId })
+            .execute();
+    }
+
+    cancelBookmark(courseId: string, userId: string) {
+        return this.Bookmark.createQueryBuilder()
+            .delete()
+            .from(Bookmarks)
+            .where('courseId = :courseId', { courseId })
+            .andWhere('userid = :userId', { userId })
+            .execute();
+    }
+
+    async insertStar(courseId: string, userId: string, point: number) {
+        const exist = await this.starPoint
+            .createQueryBuilder()
+            .where('courseId = :courseId', { courseId })
+            .andWhere('userId = :userId', { userId })
+            .getOne();
+
+        if (exist) {
+            await this.starPoint
+                .createQueryBuilder()
+                .update(Starpoint)
+                .set({ courseId, userId, myStarPoint: point })
+                .where('courseId=:courseId', { courseId })
+                .andWhere('userId=:userId', { userId })
+                .execute();
+        } else {
+            await this.starPoint
+                .createQueryBuilder()
+                .insert()
+                .into(Starpoint)
+                .values({ courseId, userId, myStarPoint: point })
+                .execute();
+        }
+        return;
+    }
+
+    async updateCoursePoint(courseId: string, point: number) {
+        return this.Course.createQueryBuilder()
+            .update(Courses)
+            .set({ starPoint: point })
             .where('courseId = :courseId', { courseId })
             .execute();
     }

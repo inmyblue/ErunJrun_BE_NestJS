@@ -11,6 +11,7 @@ import {
     Body,
     UploadedFiles,
     Delete,
+    Patch,
 } from '@nestjs/common';
 import { CoursesService } from '../services/courses.service';
 import { GetUser } from 'src/user/auth.user.decorator';
@@ -95,7 +96,44 @@ export class CoursesController {
                 message: '게시물이 삭제되었습니다',
             };
         } catch (error) {
-            throw new HttpException(error.response, error);
+            throw new HttpException(error.response, error.status);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:courseId/bookmark')
+    async bookmark(
+        @Param('courseId') courseId: string,
+        @GetUser() user: Users,
+    ) {
+        try {
+            const state = await this.courseService.bookmark(
+                courseId,
+                user.userId,
+            );
+            return { success: true, data: { bookmark: state } };
+        } catch (error) {
+            throw new HttpException(error.response, error.status);
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:courseId/starPoint')
+    async starpoint(
+        @Param('courseId') courseId: string,
+        @Body() body: number,
+        @GetUser() user: Users,
+    ) {
+        try {
+            await this.courseService.updateStar(
+                courseId,
+                user.userId,
+                body['myStarPoint'],
+            );
+            const data = await this.courseService.getStar(courseId, user);
+            return { success: true, data };
+        } catch (error) {
+            throw new HttpException(error.response, error.status);
         }
     }
 }

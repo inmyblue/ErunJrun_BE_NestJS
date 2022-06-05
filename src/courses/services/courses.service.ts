@@ -89,7 +89,7 @@ export class CoursesService {
                 myStarPoint = 0;
             }
 
-            const starPeople = await this.courseRepository.getStarByCourseId(
+            const starPeople = await this.courseRepository.getStarNumByCourseId(
                 courseId,
             );
 
@@ -182,5 +182,38 @@ export class CoursesService {
             if (url !== null) deleteCourse(url);
         }
         return;
+    }
+
+    async bookmark(courseId: string, userId: string) {
+        const chkBookmark = await this.courseRepository.getBookmark(
+            courseId,
+            userId,
+        );
+
+        const course = await this.courseRepository.getCourseByCourseId(
+            courseId,
+        );
+
+        if (course.userId === userId)
+            throw new HttpException('본인 글은 북마크할 수 없습니다', 400);
+
+        if (!chkBookmark) {
+            await this.courseRepository.doBookmark(courseId, userId);
+            return true;
+        } else {
+            await this.courseRepository.cancelBookmark(courseId, userId);
+            return false;
+        }
+    }
+
+    async updateStar(courseId: string, userId: string, point: number) {
+        await this.courseRepository.insertStar(courseId, userId, point);
+        const starPoint = await this.courseRepository.getStarByCourseId(
+            courseId,
+        );
+
+        const resultPoint = starPoint.total / starPoint.count;
+
+        await this.courseRepository.updateCoursePoint(courseId, resultPoint);
     }
 }
