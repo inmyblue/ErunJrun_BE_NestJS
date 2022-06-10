@@ -12,19 +12,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             ignoreExpiration: true,
         });
     }
-
-    // async validate(payload) {
-    //     const userId = payload.userId;
-    //     try {
-    //         const getUser = await this.userRepository.getUserById(userId);
-
-    //         if (!getUser)
-    //             throw new UnauthorizedException(
-    //                 '토큰에 해당하는 유저가 없습니다',
-    //             );
-    //         return getUser;
-    //     } catch (error) {
-    //         throw new UnauthorizedException('인증 오류가 발생했습니다');
-    //     }
-    // }
 }

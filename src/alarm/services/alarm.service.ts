@@ -22,13 +22,11 @@ export class AlarmService {
             .orderBy('createdAt')
             .getMany()
             .then((result) => {
-                for (let i = 0; i < result.length; i++) {
-                    result[i].createdAt = this.timeForToday(
-                        result[i].createdAt,
-                    );
-                    delete result[i].updatedAt;
-                    delete result[i].alarmId;
-                    delete result[i].userId;
+                for (const row of result) {
+                    row.createdAt = this.timeForToday(row.createdAt);
+                    delete row.updatedAt;
+                    delete row.alarmId;
+                    delete row.userId;
                 }
                 return result;
             });
@@ -72,28 +70,28 @@ export class AlarmService {
             .where('date = :date', { date: nowDate })
             .getRawMany();
 
-        for (let i = 0; i < data.length; i++) {
+        for (const row of data) {
             await this.Appliers.createQueryBuilder()
                 .select(['userId'])
-                .where('groupId = :groupId', { groupId: data[i].groupId })
+                .where('groupId = :groupId', { groupId: row.groupId })
                 .getRawMany()
                 .then(async (result) => {
                     let input: { [key: string]: string } = {
-                        groupId: data[i].groupId,
-                        groupTitle: data[i].title,
+                        groupId: row.groupId,
+                        groupTitle: row.title,
                         category: 'Dday',
                     };
-                    for (let j = 0; j < result.length; j++) {
-                        input.userId = result[j].userId;
+                    for (const applierRow of result) {
+                        input.userId = applierRow.userId;
                         const user = await Users.createQueryBuilder()
                             .select('nickname')
                             .where('userId = :userId', {
-                                userId: result[j].userId,
+                                userId: applierRow.userId,
                             })
                             .getRawOne();
                         input.nickname = user.nickname;
 
-                        if (data[i].userId === result[j].userId) {
+                        if (row.userId === applierRow.userId) {
                             input.role = 'host';
                         } else {
                             input.role = 'attendance';

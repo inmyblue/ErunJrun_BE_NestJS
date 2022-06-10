@@ -124,27 +124,24 @@ export class GroupRepository {
         }
 
         return data.getRawMany().then(async (result) => {
-            for (let i = 0; i < result.length; i++) {
+            for (const row of result) {
                 //그룹러닝 호스트의 닉네임/프로필이미지 정보
-                const userData = await this.getUser(result[i].userId);
-                result[i].nickname = userData.nickname;
-                result[i].profileUrl = userData.profileUrl;
+                const userData = await this.getUser(row.userId);
+                row.nickname = userData.nickname;
+                row.profileUrl = userData.profileUrl;
 
                 //로그인된 유저가 이 그룹러닝에 신청이 되었는지 체크
-                const chkApply = await this.chkApply(
-                    myUserId,
-                    result[i].groupId,
-                );
-                if (chkApply) result[i].applyState = true;
-                else result[i].applyState = false;
+                const chkApply = await this.chkApply(myUserId, row.groupId);
+                if (chkApply) row.applyState = true;
+                else row.applyState = false;
 
                 //참여완료한 그룹러닝의 경우 호스트평가/출석체크 완료여부 리턴
                 if (condition.complete === true) {
-                    if (result[i].userId === myUserId) {
-                        result[i].evaluation =
+                    if (row.userId === myUserId) {
+                        row.evaluation =
                             chkApply.evaluation === 0 ? false : true;
                     } else {
-                        result[i].attendance =
+                        row.attendance =
                             chkApply.attendance === 0 ? false : true;
                     }
                 }
@@ -152,64 +149,62 @@ export class GroupRepository {
                 //그룹러닝 날짜+시간
                 const nowDateTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
                 const dateTime =
-                    dayjs(result[i].date).format('YYYY-MM-DD') +
+                    dayjs(row.date).format('YYYY-MM-DD') +
                     ' ' +
-                    result[i].standbyTime;
+                    row.standbyTime;
 
-                result[i].date = dayjs(dateTime).format(
-                    'YYYY.MM.DD (dd) HH:mm',
-                );
+                row.date = dayjs(dateTime).format('YYYY.MM.DD (dd) HH:mm');
 
                 //모집마감까지 얼마나 남았는지 출력
-                if (parseInt(result[i].applyEndTime) === 0) {
+                if (parseInt(row.applyEndTime) === 0) {
                     let diffTime = dayjs(nowDateTime).diff(dateTime, 'h');
-                    result[i].applyEndTime = Math.abs(diffTime) + ' 시간';
-                } else if (parseInt(result[i].applyEndTime) > 0) {
-                    result[i].applyEndTime += ' 일';
+                    row.applyEndTime = Math.abs(diffTime) + ' 시간';
+                } else if (parseInt(row.applyEndTime) > 0) {
+                    row.applyEndTime += ' 일';
                 } else {
-                    result[i].applyEndTime = '0 일';
+                    row.applyEndTime = '0 일';
                 }
 
                 //러닝장소는 구정보까지만 나오도록
-                let location: string[] = result[i].location.split(' ');
-                result[i].location = location[0] + ' ' + location[1];
+                let location: string[] = row.location.split(' ');
+                row.location = location[0] + ' ' + location[1];
 
-                if (result[i].thumbnailUrl === null) {
-                    switch (result[i].thema) {
+                if (row.thumbnailUrl === null) {
+                    switch (row.thema) {
                         case '산':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%EB%B3%B8%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%89%E1%85%A1%E1%86%AB.png';
                             break;
                         case '도시':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%83%E1%85%A9%E1%84%89%E1%85%B5.png';
                             break;
                         case '강변':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A7%E1%86%AB.png';
                             break;
                         case '해변':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%92%E1%85%A2%E1%84%87%E1%85%A7%E1%86%AB.png';
                             break;
                         case '공원':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A9%E1%86%BC%E1%84%8B%E1%85%AF%E1%86%AB.png';
                             break;
                         case '트랙':
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%90%E1%85%B3%E1%84%85%E1%85%A2%E1%86%A8.png';
                             break;
                     }
                 } else {
-                    if (result[i].updateTime <= 10) {
-                        result[i].thumbnailUrl =
+                    if (row.updateTime <= 10) {
+                        row.thumbnailUrl =
                             'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/' +
-                            result[i].thumbnailUrl;
+                            row.thumbnailUrl;
                     } else {
-                        result[i].thumbnailUrl =
+                        row.thumbnailUrl =
                             'https://dpnlaom97ul1b.cloudfront.net/w_384/' +
-                            result[i].thumbnailUrl;
+                            row.thumbnailUrl;
                     }
                 }
             }
@@ -422,51 +417,51 @@ export class GroupRepository {
             .andWhere('date >= now()')
             .getRawMany()
             .then((result) => {
-                for (let i = 0; i < result.length; i++) {
-                    result[i].date =
-                        dayjs(result[i].date).format('YYYY.MM.DD (dd)') +
+                for (const row of result) {
+                    row.date =
+                        dayjs(row.date).format('YYYY.MM.DD (dd)') +
                         ' ' +
-                        result[i].standbyTime;
+                        row.standbyTime;
 
-                    result[i].dDay = Math.abs(result[i].dDay);
-                    result[i].distance = result[i].distance + 'km';
+                    row.dDay = Math.abs(row.dDay);
+                    row.distance = row.distance + 'km';
 
-                    if (result[i].thumbnailUrl === null) {
-                        switch (result[i].thema) {
+                    if (row.thumbnailUrl === null) {
+                        switch (row.thema) {
                             case '산':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%EB%B3%B8%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%89%E1%85%A1%E1%86%AB.png';
                                 break;
                             case '도시':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%83%E1%85%A9%E1%84%89%E1%85%B5.png';
                                 break;
                             case '강변':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A7%E1%86%AB.png';
                                 break;
                             case '해변':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%92%E1%85%A2%E1%84%87%E1%85%A7%E1%86%AB.png';
                                 break;
                             case '공원':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A9%E1%86%BC%E1%84%8B%E1%85%AF%E1%86%AB.png';
                                 break;
                             case '트랙':
-                                result[i].thumbnailUrl =
+                                row.thumbnailUrl =
                                     'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%90%E1%85%B3%E1%84%85%E1%85%A2%E1%86%A8.png';
                                 break;
                         }
                     } else {
-                        if (result[i].updateTime <= 10) {
-                            result[i].thumbnailUrl =
+                        if (row.updateTime <= 10) {
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/' +
-                                result[i].thumbnailUrl;
+                                row.thumbnailUrl;
                         } else {
-                            result[i].thumbnailUrl =
+                            row.thumbnailUrl =
                                 'https://dpnlaom97ul1b.cloudfront.net/w_384/' +
-                                result[i].thumbnailUrl;
+                                row.thumbnailUrl;
                         }
                     }
                 }
@@ -508,10 +503,8 @@ export class GroupRepository {
             .where('groupId = :groupId', { groupId })
             .getMany()
             .then(async (result) => {
-                for (let i = 0; i < result.length; i++) {
-                    result[i].user = await this.getUserProfile(
-                        result[i].userId,
-                    );
+                for (const row of result) {
+                    row.user = await this.getUserProfile(row.userId);
                 }
 
                 return result;

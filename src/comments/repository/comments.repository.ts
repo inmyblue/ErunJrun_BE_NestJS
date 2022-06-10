@@ -32,12 +32,12 @@ export class CommentRepository {
         }
 
         return data.getMany().then(async (result) => {
-            for (let i = 0; i < result.length; i++) {
-                result[i].createdAt = this.timeForToday(result[i].createdAt);
+            for (const row of result) {
+                row.createdAt = this.timeForToday(row.createdAt);
 
-                result[i].user = await this.Users.findOne({
+                row.user = await this.Users.findOne({
                     select: ['userId', 'userLevel', 'nickname', 'profileUrl'],
-                    where: { userId: result[i].userId },
+                    where: { userId: row.userId },
                 });
             }
             return result;
@@ -79,19 +79,17 @@ export class CommentRepository {
                     })
                     .getMany()
                     .then(async (result) => {
-                        for (let i = 0; i < result.length; i++) {
-                            result[i].user = await this.Users.findOne({
+                        for (const row of result) {
+                            row.user = await this.Users.findOne({
                                 select: [
                                     'userId',
                                     'userLevel',
                                     'nickname',
                                     'profileUrl',
                                 ],
-                                where: { userId: result[i].userId },
+                                where: { userId: row.userId },
                             });
-                            result[i].createdAt = this.timeForToday(
-                                result[i].createdAt,
-                            );
+                            row.createdAt = this.timeForToday(row.createdAt);
                         }
                         return result;
                     });
@@ -158,19 +156,17 @@ export class CommentRepository {
             .where('commentId = :commentId', { commentId })
             .getMany()
             .then(async (result) => {
-                for (let i = 0; i < result.length; i++) {
-                    result[i].createdAt = this.timeForToday(
-                        result[i].createdAt,
-                    );
+                for (const row of result) {
+                    row.createdAt = this.timeForToday(row.createdAt);
 
-                    result[i].user = await this.Users.findOne({
+                    row.user = await this.Users.findOne({
                         select: [
                             'userId',
                             'userLevel',
                             'nickname',
                             'profileUrl',
                         ],
-                        where: { userId: result[i].userId },
+                        where: { userId: row.userId },
                     });
                 }
 

@@ -83,34 +83,34 @@ export class CourseRepository {
         }
 
         return data.getRawMany().then(async (result) => {
-            for (let i = 0; i < result.length; i++) {
+            for (const row of result) {
                 //이미지 리사이징 URL로 변경
-                if (result[i].updateTime <= 10) {
-                    result[i].courseImageUrl1 =
+                if (row.updateTime <= 10) {
+                    row.courseImageUrl1 =
                         'https://dpnlaom97ul1b.cloudfront.net/courseImage/' +
-                        result[i].courseImageUrl1;
+                        row.courseImageUrl1;
                 } else {
-                    result[i].courseImageUrl1 =
+                    row.courseImageUrl1 =
                         'https://dpnlaom97ul1b.cloudfront.net/w_384/' +
-                        result[i].courseImageUrl1;
+                        row.courseImageUrl1;
                 }
 
                 //북마크 상태값
                 if (user) {
                     const bookmark = await this.Bookmark.createQueryBuilder()
                         .where('courseId = :courseId', {
-                            courseId: result[i].courseId,
+                            courseId: row.courseId,
                         })
                         .andWhere('userId = :userId', { userId: user.userId })
                         .getOne();
 
-                    if (bookmark) result[i].bookmark = true;
-                    else result[i].bookmark = false;
-                } else result[i].bookmark = false;
+                    if (bookmark) row.bookmark = true;
+                    else row.bookmark = false;
+                } else row.bookmark = false;
 
                 //주소 양식변경
-                const location = result[i].location.split(' ');
-                result[i].location = location[0] + ' ' + location[1];
+                const location = row.location.split(' ');
+                row.location = location[0] + ' ' + location[1];
             }
             return result;
         });
