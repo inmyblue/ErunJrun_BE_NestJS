@@ -11,6 +11,7 @@ import { AlarmModule } from './alarm/alarm.module';
 import { CommentsModule } from './comments/comments.module';
 import { MypageModule } from './mypage/mypage.module';
 import { CoursesModule } from './courses/courses.module';
+import { ChatsModule } from './chats/chats.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { CoursesModule } from './courses/courses.module';
         CommentsModule,
         MypageModule,
         CoursesModule,
+        ChatsModule,
     ],
     controllers: [AppController],
     providers: [

@@ -13,6 +13,7 @@ import {
 import { Appliers } from './Appliers';
 import { Comments } from './Comments';
 import { Users } from './Users';
+import { Chats } from './Chats';
 
 @Index('FK_Users_TO_Groups_1', ['userId'], {})
 @Entity('Groups', { schema: 'erunjrun' })
@@ -91,6 +92,9 @@ export class Groups extends BaseEntity {
 
     @OneToMany(() => Comments, (comments) => comments.group)
     comments: Comments[];
+
+    @OneToMany(() => Chats, (chats) => chats.group)
+    chats: Chats[];
 
     @ManyToOne(() => Users, (users) => users.groups, {
         onDelete: 'CASCADE',
